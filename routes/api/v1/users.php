@@ -22,7 +22,7 @@ Route::middleware([
             ->name('update')
             ->whereNumber('user');
 
-        Route::delete('/users/{user}', [UserController::class, 'delete'])
+        Route::delete('/users/{user}', [UserController::class, 'destroy'])
             ->name('delete')
             ->whereNumber('user');
     });

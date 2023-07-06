@@ -2,13 +2,11 @@
 
 namespace Database\Factories\Helper;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 class FactoryHelper
 {
 
     /**
-     * @param string $model | HasFactory $model
+     * @param string $model 
      */
 
     public static function getRandomModelId(string $model)

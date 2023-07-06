@@ -9,8 +9,17 @@ class Post extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'body'
+    ];
+
     protected $casts = [
         'body' => 'array'
+    ];
+
+    protected $appends = [
+      
     ];
 
     //Accessor
@@ -18,6 +27,7 @@ class Post extends Model
     {
         return strtoupper($this->title);
     }
+
 
     //Mutator
     public function setTitleAttribute($value)

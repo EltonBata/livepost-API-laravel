@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StorePostRequest extends FormRequest
+class StoreCommentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +25,9 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required'],
-            'body' => ['nullable'],
-            'user_id' => ['required', Rule::exists(User::class, 'id')]
+            'body' => ['required'],
+            'user_id' => ['required', Rule::exists(User::class, 'id')],
+            'post_id' => ['required', Rule::exists(Post::class, 'id')]
         ];
     }
 }
