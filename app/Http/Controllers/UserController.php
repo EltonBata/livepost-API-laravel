@@ -15,9 +15,11 @@ class UserController extends Controller
      * Display a listing of the resource.
      * @return \Illuminate\Http\Resources\Json\JsonResource
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
+        $page_size = $request->page_size ?? 10;
+
+        $users = User::paginate($page_size);
 
         return UserResource::collection($users);
     }

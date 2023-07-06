@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CommentController extends Controller
@@ -14,9 +15,12 @@ class CommentController extends Controller
      * Display a listing of the resource.
      * @return \Illuminate\Http\Resources\Json\JsonResource
      */
-    public function index()
+    public function index(Request $request)
     {
-        $comments = Comment::all();
+
+        $page_size = $request->page_size ?? 10;
+
+        $comments = Comment::paginate($page_size);
 
         return CommentResource::collection($comments);
     }
