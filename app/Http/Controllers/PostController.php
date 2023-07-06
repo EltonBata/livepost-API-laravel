@@ -6,12 +6,19 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use App\Repositories\PostRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
+
+    public function __construct(protected PostRepository $repository)
+    {
+
+    }
+
     /**
      * Display a listing of the resource.
      * @return \Illuminate\Http\Resources\Json\ResourceCollection
@@ -21,7 +28,7 @@ class PostController extends Controller
 
         $page_size = $request->page_size ?? 10;
 
-        $posts = Post::paginate($page_size);
+        $posts = $this->repository->showAll($page_size);
 
         return PostResource::collection($posts);
     }
@@ -34,15 +41,7 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
 
-        $create = DB::transaction(function () use ($request) {
-
-            $post = Post::create($request->validated());
-
-            $post->users()->sync($request->user_id);
-
-            return $post;
-        });
-
+        $create = $this->repository->create($request->validated());
         return new PostResource($create);
     }
 
@@ -64,9 +63,9 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $update = $post->updateOrFail($request->validated());
+        $update = $this->repository->update($post, $request->validated());
 
-        return new PostResource($post);
+        return new PostResource($update);
     }
 
     /**
@@ -76,7 +75,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        $delete = $post->deleteOrFail();
+        $delete = $this->repository->delete($post);
 
         return new JsonResponse([
             'data' => $delete

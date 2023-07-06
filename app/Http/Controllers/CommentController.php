@@ -6,11 +6,18 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
+use App\Repositories\CommentRepository;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CommentController extends Controller
 {
+
+    public function __construct(protected CommentRepository $repository)
+    {
+
+    }
+
     /**
      * Display a listing of the resource.
      * @return \Illuminate\Http\Resources\Json\JsonResource
@@ -20,7 +27,7 @@ class CommentController extends Controller
 
         $page_size = $request->page_size ?? 10;
 
-        $comments = Comment::paginate($page_size);
+        $comments = $this->repository->showAll($page_size);
 
         return CommentResource::collection($comments);
     }
@@ -32,7 +39,7 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request)
     {
-        $create = Comment::create($request->validated());
+        $create = $this->repository->create($request->validated());
 
         return new CommentResource($create);
     }
@@ -55,9 +62,9 @@ class CommentController extends Controller
      */
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        $comment->updateOrFail($request->validated());
+        $update = $this->repository->update($comment, $request->validated());
 
-        return new CommentResource($comment);
+        return new CommentResource($update);
     }
 
     /**
@@ -67,7 +74,7 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        $delete = $comment->deleteOrFail();
+        $delete = $this->repository->delete($comment);
 
         return new JsonResponse([
             'data' => $delete

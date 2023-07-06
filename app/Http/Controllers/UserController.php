@@ -6,11 +6,18 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Repositories\UserRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+
+    public function __construct(protected UserRepository $repository)
+    {
+
+    }
+
     /**
      * Display a listing of the resource.
      * @return \Illuminate\Http\Resources\Json\JsonResource
@@ -19,7 +26,7 @@ class UserController extends Controller
     {
         $page_size = $request->page_size ?? 10;
 
-        $users = User::paginate($page_size);
+        $users = $this->repository->showAll($page_size);
 
         return UserResource::collection($users);
     }
@@ -31,7 +38,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $create = User::create($request->validated());
+        $create = $this->repository->create($request->validated());
 
         return new UserResource($create);
     }
@@ -54,9 +61,9 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $update = $user->updateOrFail($request->validated());
+        $update = $this->repository->update($user, $request->validated());
 
-        return new UserResource($user);
+        return new UserResource($update);
     }
 
     /**
@@ -66,7 +73,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $delete = $user->deleteOrFail();
+        $delete = $this->repository->delete($user);
 
         return new JsonResponse([
             'data' => $delete
