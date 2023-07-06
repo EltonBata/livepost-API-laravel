@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -12,21 +13,19 @@ class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Resources\Json\ResourceCollection
      */
     public function index()
     {
         $posts = Post::all();
 
-        return new JsonResponse([
-            'data' => $posts
-        ]);
+        return PostResource::collection($posts);
     }
 
     /**
      * Store a newly created resource in storage.
      * @param \App\Http\Requests\StorePostRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Resources\Json\JsonResource
      */
     public function store(StorePostRequest $request)
     {
@@ -40,36 +39,30 @@ class PostController extends Controller
             return $post;
         });
 
-        return new JsonResponse([
-            'data' => $create
-        ]);
+        return new PostResource($create);
     }
 
     /**
      * Display the specified resource.
      * @param \App\Models\Post $post
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Resources\Json\JsonResource
      */
     public function show(Post $post)
     {
-        return new JsonResponse([
-            'data' => $post
-        ]);
+        return new PostResource($post);
     }
 
     /**
      * Update the specified resource in storage.
      * @param \App\Models\Post $post
      * @param \App\Http\Requests\UpdatePostRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Resources\Json\JsonResource
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
         $update = $post->updateOrFail($request->validated());
 
-        return new JsonResponse([
-            'data' => $update
-        ]);
+        return new PostResource($post);
     }
 
     /**

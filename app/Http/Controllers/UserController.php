@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,56 +13,48 @@ class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Resources\Json\JsonResource
      */
     public function index()
     {
         $users = User::all();
 
-        return new JsonResponse([
-            'data' => $users
-        ]);
+        return UserResource::collection($users);
     }
 
     /**
      * Store a newly created resource in storage.
      * @param \App\Http\Requests\StoreUserRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Resources\Json\JsonResource
      */
     public function store(StoreUserRequest $request)
     {
         $create = User::create($request->validated());
 
-        return new JsonResponse([
-            'data' => $create
-        ]);
+        return new UserResource($create);
     }
 
     /**
      * Display the specified resource.
      * @param \App\Models\User $user
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Resources\Json\JsonResource
      */
     public function show(User $user)
     {
-        return new JsonResponse([
-            'data' => $user
-        ]);
+        return new UserResource($user);
     }
 
     /**
      * Update the specified resource in storage.
      * @param \App\Http\Requests\UpdateUserRequest $request
      * @param \App\Models\User $user
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Resources\Json\JsonResource
      */
     public function update(UpdateUserRequest $request, User $user)
     {
         $update = $user->updateOrFail($request->validated());
 
-        return new JsonResponse([
-            'data' => $user
-        ]);
+        return new UserResource($user);
     }
 
     /**
