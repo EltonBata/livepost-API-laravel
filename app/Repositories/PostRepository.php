@@ -5,6 +5,7 @@
  */
 namespace App\Repositories;
 
+use App\Exceptions\PostJsonException;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
 
@@ -39,6 +40,8 @@ class PostRepository extends Repository
 
             $post->users()->sync(data_get($attributes, 'user_id'));
 
+            throw_if(!$post, new PostJsonException('Failed to create post', 500));
+
             return $post;
         });
 
@@ -53,7 +56,11 @@ class PostRepository extends Repository
      */
     public function update($post, array $attributes)
     {
+
         $update = $post->updateOrFail($attributes);
+
+        throw_if(!$update, new PostJsonException('Failed to update post', 500));
+
         return $post;
     }
 
@@ -64,7 +71,11 @@ class PostRepository extends Repository
      */
     public function delete($post)
     {
-        return $post->deleteOrFail();
+        $delete = $post->deleteOrFail();
+
+        throw_if(!$delete, new PostJsonException('Failed to delete post', 500));
+
+        return $delete;
 
     }
 }

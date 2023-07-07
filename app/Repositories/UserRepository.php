@@ -5,6 +5,7 @@
  */
 namespace App\Repositories;
 
+use App\Exceptions\UserJsonException;
 use App\Models\User;
 
 /**
@@ -30,7 +31,11 @@ class UserRepository extends Repository
      */
     public function create(array $attributes)
     {
-        return User::create($attributes);
+        $create = User::create($attributes);
+
+        throw_if(!$create, new UserJsonException('Failed to create user', 500));
+
+        return $create;
     }
 
     /**
@@ -41,7 +46,10 @@ class UserRepository extends Repository
      */
     public function update($user, array $attributes)
     {
-        $user->updateOrFail($attributes);
+        $update = $user->updateOrFail($attributes);
+
+        throw_if(!$update, new UserJsonException('Failed to update user', 500));
+
         return $user;
     }
 
@@ -52,7 +60,11 @@ class UserRepository extends Repository
      */
     public function delete($user)
     {
-        return $user->deleteOrFail();
+        $delete = $user->deleteOrFail();
+
+        throw_if(!$delete, new UserJsonException('Failed to delete user', 500));
+
+        return $delete;
     }
 
 }

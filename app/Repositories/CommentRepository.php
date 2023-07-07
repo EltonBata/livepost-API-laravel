@@ -5,6 +5,7 @@
  */
 namespace App\Repositories;
 
+use App\Exceptions\CommentJsonException;
 use App\Models\Comment;
 
 /**
@@ -30,7 +31,11 @@ class CommentRepository extends Repository
      */
     public function create(array $attributes)
     {
-        return Comment::create($attributes);
+        $create = Comment::create($attributes);
+
+        throw_if(!$create, new CommentJsonException('Failed to create comment', 500));
+
+        return $create;
     }
 
     /**
@@ -41,7 +46,10 @@ class CommentRepository extends Repository
      */
     public function update($comment, array $attributes)
     {
-        $comment->updateOrFail($attributes);
+        $update = $comment->updateOrFail($attributes);
+
+        throw_if(!$update, new CommentJsonException('Failed to update comment', 500));
+
         return $comment;
     }
 
@@ -52,7 +60,11 @@ class CommentRepository extends Repository
      */
     public function delete($comment)
     {
-        return $comment->deleteOrFail();
+        $delete = $comment->deleteOrFail();
+
+        throw_if(!$delete, new CommentJsonException('Failed to delete comment', 500));
+
+        return $delete;
     }
 
 }

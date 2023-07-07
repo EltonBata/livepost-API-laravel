@@ -79,6 +79,6 @@ class PostController extends Controller
 
         return new JsonResponse([
             'data' => $delete
-        ]);
+        ], 204);
     }
 }
