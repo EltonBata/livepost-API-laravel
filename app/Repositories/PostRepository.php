@@ -5,6 +5,9 @@
  */
 namespace App\Repositories;
 
+use App\Events\Models\post\CreatedPostEvent;
+use App\Events\Models\post\DeletedPostEvent;
+use App\Events\Models\post\UpdatedPostEvent;
 use App\Exceptions\PostJsonException;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
@@ -42,6 +45,8 @@ class PostRepository extends Repository
 
             throw_if(!$post, new PostJsonException('Failed to create post', 500));
 
+            event(new CreatedPostEvent($post));
+
             return $post;
         });
 
@@ -61,6 +66,8 @@ class PostRepository extends Repository
 
         throw_if(!$update, new PostJsonException('Failed to update post', 500));
 
+        event(new UpdatedPostEvent($post));
+
         return $post;
     }
 
@@ -74,6 +81,8 @@ class PostRepository extends Repository
         $delete = $post->deleteOrFail();
 
         throw_if(!$delete, new PostJsonException('Failed to delete post', 500));
+
+        event(new DeletedPostEvent($post));
 
         return $delete;
 

@@ -5,6 +5,9 @@
  */
 namespace App\Repositories;
 
+use App\Events\Models\user\CreatedUserEvent;
+use App\Events\Models\user\DeletedUserEvent;
+use App\Events\Models\user\UpdatedUserEvent;
 use App\Exceptions\UserJsonException;
 use App\Models\User;
 
@@ -35,6 +38,8 @@ class UserRepository extends Repository
 
         throw_if(!$create, new UserJsonException('Failed to create user', 500));
 
+        event(new CreatedUserEvent($create));
+
         return $create;
     }
 
@@ -50,6 +55,8 @@ class UserRepository extends Repository
 
         throw_if(!$update, new UserJsonException('Failed to update user', 500));
 
+        event(new UpdatedUserEvent($user));
+
         return $user;
     }
 
@@ -63,6 +70,8 @@ class UserRepository extends Repository
         $delete = $user->deleteOrFail();
 
         throw_if(!$delete, new UserJsonException('Failed to delete user', 500));
+
+        event(new DeletedUserEvent($user));
 
         return $delete;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Models\post\DeletedPostEvent;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
@@ -80,5 +81,6 @@ class PostController extends Controller
         return new JsonResponse([
             'data' => $delete
         ], 204);
+
     }
 }

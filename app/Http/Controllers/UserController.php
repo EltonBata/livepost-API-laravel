@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Models\user\CreatedUserEvent;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
@@ -24,6 +25,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        //event(new CreatedUserEvent(User::factory()->createOne()));
+
         $page_size = $request->page_size ?? 10;
 
         $users = $this->repository->showAll($page_size);
