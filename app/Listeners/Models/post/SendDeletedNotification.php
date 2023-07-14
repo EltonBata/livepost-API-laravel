@@ -20,6 +20,6 @@ class SendDeletedNotification
      */
     public function handle(object $event): void
     {
-        dd("apagou");
+        
     }
 }

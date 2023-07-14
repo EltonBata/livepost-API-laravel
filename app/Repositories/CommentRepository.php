@@ -14,15 +14,7 @@ use App\Models\Comment;
 class CommentRepository extends Repository
 {
 
-    /**
-     * Summary of showAll
-     * @param mixed $attribute
-     * @return mixed
-     */
-    public function showAll($attribute)
-    {
-        return Comment::paginate($attribute);
-    }
+    protected $model = Comment::class;
 
     /**
      * Summary of create

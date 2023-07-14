@@ -17,15 +17,8 @@ use App\Models\User;
 class UserRepository extends Repository
 {
 
-    /**
-     * Summary of showAll
-     * @param mixed $attribute
-     * @return mixed
-     */
-    public function showAll($attribute)
-    {
-        return User::paginate($attribute);
-    }
+    protected $model = User::class;
+    
 
     /**
      * Summary of create

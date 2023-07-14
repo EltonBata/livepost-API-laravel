@@ -5,10 +5,6 @@
  */
 namespace App\Repositories;
 
-use App\Events\Models\post\CreatedPostEvent;
-use App\Events\Models\post\DeletedPostEvent;
-use App\Events\Models\post\UpdatedPostEvent;
-use App\Exceptions\PostJsonException;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
 
@@ -19,72 +15,32 @@ use Illuminate\Support\Facades\DB;
 class PostRepository extends Repository
 {
 
-    /**
-     * Summary of showAll
-     * @param mixed $page_size
-     * @return mixed
-     */
-    public function showAll($page_size)
+    protected $model = Post::class;
+
+
+    public function create(array $post)
     {
-        return Post::paginate($page_size);
-    }
+        return DB::transaction(function () use ($post) {
 
+            $post = Post::create($post);
 
-    /**
-     * Summary of create
-     * @param array $attributes
-     * @return mixed
-     */
-    public function create(array $attributes)
-    {
-        return DB::transaction(function () use ($attributes) {
-
-            $post = Post::create($attributes);
-
-            $post->users()->sync(data_get($attributes, 'user_id'));
-
-            throw_if(!$post, new PostJsonException('Failed to create post', 500));
-
-            event(new CreatedPostEvent($post));
+            $post->users()->sync($post['user_id']);
 
             return $post;
+
         });
 
     }
 
 
-    /**
-     * Summary of update
-     * @param \App\Models\Post $post
-     * @param array $attributes
-     * @return Post
-     */
-    public function update($post, array $attributes)
+    public function update(array $attributes, $post)
     {
-
-        $update = $post->updateOrFail($attributes);
-
-        throw_if(!$update, new PostJsonException('Failed to update post', 500));
-
-        event(new UpdatedPostEvent($post));
-
-        return $post;
+        return $post->updateOrFail($attributes);
     }
 
-    /**
-     * Summary of delete
-     * @param \App\Models\Post $post
-     * @return bool|null
-     */
+
     public function delete($post)
     {
-        $delete = $post->deleteOrFail();
-
-        throw_if(!$delete, new PostJsonException('Failed to delete post', 500));
-
-        event(new DeletedPostEvent($post));
-
-        return $delete;
-
+        return $post->deleteOrFail();
     }
 }

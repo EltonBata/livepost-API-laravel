@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Services\Models;
 
-
-abstract class Repository
+abstract class Service
 {
 
-    protected $model;
+    protected $repository;
 
     public function __construct()
     {
-        $this->model = app($this->model);
+        $this->repository = app($this->repository);
     }
 
     public function showAll($pages_number)
     {
-        return $this->model::paginate($pages_number);
+        return $this->repository->showAll($pages_number);
     }
 
 
@@ -24,6 +23,4 @@ abstract class Repository
     public abstract function update(array $attributes, $model);
 
     public abstract function delete($model);
-
-
 }
