@@ -61,11 +61,11 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
-        $delete = $this->service->delete($post);
+        $this->service->delete($post);
 
         return new JsonResponse([
-            'data' => $delete
-        ], 204);
+            'message' => 'Comment Deleted',
+        ]);
 
     }
 }

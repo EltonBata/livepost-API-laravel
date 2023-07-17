@@ -24,6 +24,7 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id' => [Rule::exists(User::class)],
             'name' => ['required'],
             'email' => [
                 'required',

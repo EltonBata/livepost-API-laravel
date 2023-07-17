@@ -18,9 +18,10 @@ class CreatedUserEvent
     /**
      * Create a new event instance.
      */
-    public function __construct(protected User $user)
-    {
-        
+    public function __construct(
+        protected User $user
+    ) {
+
     }
 
     /**

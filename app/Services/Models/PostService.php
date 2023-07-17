@@ -8,7 +8,6 @@ use App\Events\Models\post\DeletedPostEvent;
 use App\Events\Models\post\UpdatedPostEvent;
 use App\Exceptions\PostJsonException;
 use App\Repositories\PostRepository;
-use App\Services\Models;
 
 class PostService extends Service implements PostServiceInterface
 {

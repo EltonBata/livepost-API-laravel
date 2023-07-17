@@ -20,6 +20,6 @@ class SendCreatedNotification
      */
     public function handle(object $event): void
     {
-        //
+        // 
     }
 }
