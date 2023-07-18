@@ -25,7 +25,7 @@ class StoreCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'body' => ['required'],
+            'body' => ['required', 'array'],
             'user_id' => ['required', Rule::exists(User::class, 'id')],
             'post_id' => ['required', Rule::exists(Post::class, 'id')]
         ];

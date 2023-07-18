@@ -24,8 +24,8 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required'],
-            'email' => ['required', Rule::unique(User::class)],
+            'name' => ['required', 'string'],
+            'email' => ['required', 'string', Rule::unique(User::class)],
             'password' => ['required', 'confirmed']
         ];
     }

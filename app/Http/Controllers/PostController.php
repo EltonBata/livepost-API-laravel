@@ -35,10 +35,11 @@ class PostController extends Controller
     {
 
         $create = $this->service->create($request->validated());
-        return [
-            'message' => 'Post Created',
-            'data' => new PostResource($create)
-        ];
+        return new PostResource($create);
+        // return [
+        //     'message' => 'Post Created',
+        //     'data' => new PostResource($create)
+        // ];
     }
 
 

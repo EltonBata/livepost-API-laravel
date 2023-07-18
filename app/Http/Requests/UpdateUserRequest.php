@@ -25,9 +25,10 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'id' => [Rule::exists(User::class)],
-            'name' => ['required'],
+            'name' => ['required', 'string'],
             'email' => [
                 'required',
+                'string',
                 Rule::unique(User::class, 'email')->ignore($this->id)
             ],
         ];

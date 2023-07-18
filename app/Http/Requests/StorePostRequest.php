@@ -24,8 +24,8 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required'],
-            'body' => ['nullable'],
+            'title' => ['required', 'string'],
+            'body' => ['nullable', 'array'],
             'user_id' => ['required', Rule::exists(User::class, 'id')]
         ];
     }
